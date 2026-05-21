@@ -34,9 +34,37 @@ async function run() {
         .db("docAppointDB")
         .collection("doctors");
 
+    const bookingsCollection =
+      client
+        .db("docAppointDB")
+        .collection("bookings");
+
     app.get("/doctors", async (req, res) => {
       const result =
         await doctorsCollection.find().toArray();
+
+      res.send(result);
+    });
+
+    app.post(
+      "/bookings",
+      async (req, res) => {
+        const booking = req.body;
+
+        const result =
+          await bookingsCollection.insertOne(
+            booking
+          );
+
+        res.send(result);
+      }
+    );
+
+    app.get("/bookings", async (req, res) => {
+      const result =
+        await bookingsCollection
+          .find()
+          .toArray();
 
       res.send(result);
     });
