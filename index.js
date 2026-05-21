@@ -15,7 +15,7 @@ app.use(cors());
 
 app.use(express.json());
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.yourid.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@mango.ray55dg.mongodb.net/?retryWrites=true&w=majority&appName=Mango`;
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -27,6 +27,8 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    await client.connect();
+
     const doctorsCollection =
       client
         .db("docAppointDB")
@@ -38,6 +40,14 @@ async function run() {
 
       res.send(result);
     });
+
+    await client
+      .db("admin")
+      .command({ ping: 1 });
+
+    console.log(
+      "MongoDB Connected Successfully"
+    );
   } finally {
   }
 }
