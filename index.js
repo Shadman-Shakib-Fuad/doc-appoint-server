@@ -9,6 +9,8 @@ const jwt = require("jsonwebtoken");
 const cookieParser =
   require("cookie-parser");
 
+const verifyToken = require("./middlewares/verifyToken");
+
 const {
   MongoClient,
   ServerApiVersion,
@@ -84,14 +86,18 @@ async function run() {
       }
     );
 
-    app.get("/bookings", async (req, res) => {
-      const result =
-        await bookingsCollection
-          .find()
-          .toArray();
+    app.get(
+      "/bookings",
+      verifyToken,
+      async (req, res) => {
+        const result =
+          await bookingsCollection
+            .find()
+            .toArray();
 
-      res.send(result);
-    });
+        res.send(result);
+      }
+    );
 
     app.delete(
       "/bookings/:id",
