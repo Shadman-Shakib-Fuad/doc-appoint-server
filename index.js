@@ -4,6 +4,11 @@ const cors = require("cors");
 
 require("dotenv").config();
 
+const jwt = require("jsonwebtoken");
+
+const cookieParser =
+  require("cookie-parser");
+
 const {
   MongoClient,
   ServerApiVersion,
@@ -17,6 +22,8 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 
 app.use(express.json());
+
+app.use(cookieParser());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@mango.ray55dg.mongodb.net/?retryWrites=true&w=majority&appName=Mango`;
 
@@ -41,6 +48,20 @@ async function run() {
       client
         .db("docAppointDB")
         .collection("bookings");
+
+    app.post("/jwt", async (req, res) => {
+      const user = req.body;
+
+      const token = jwt.sign(
+        user,
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "7d",
+        }
+      );
+
+      res.send({ token });
+    });
 
     app.get("/doctors", async (req, res) => {
       const result =
