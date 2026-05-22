@@ -72,6 +72,24 @@ async function run() {
       res.send(result);
     });
 
+    app.get(
+      "/doctors/:id",
+      async (req, res) => {
+        const id = req.params.id;
+
+        const query = {
+          id: parseInt(id),
+        };
+
+        const result =
+          await doctorsCollection.findOne(
+            query
+          );
+
+        res.send(result);
+      }
+    );
+
     app.post(
       "/bookings",
       async (req, res) => {
@@ -93,6 +111,24 @@ async function run() {
         const result =
           await bookingsCollection
             .find()
+            .toArray();
+
+        res.send(result);
+      }
+    );
+
+    app.get(
+      "/bookings/:email",
+      verifyToken,
+      async (req, res) => {
+        const email =
+          req.params.email;
+
+        const query = { email };
+
+        const result =
+          await bookingsCollection
+            .find(query)
             .toArray();
 
         res.send(result);
