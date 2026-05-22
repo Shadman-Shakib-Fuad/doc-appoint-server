@@ -67,7 +67,9 @@ async function run() {
 
     app.get("/doctors", async (req, res) => {
       const result =
-        await doctorsCollection.find().toArray();
+        await doctorsCollection
+          .find()
+          .toArray();
 
       res.send(result);
     });
@@ -78,7 +80,7 @@ async function run() {
         const id = req.params.id;
 
         const query = {
-          id: parseInt(id),
+          _id: new ObjectId(id),
         };
 
         const result =
