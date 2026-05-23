@@ -41,6 +41,10 @@ async function run() {
   try {
     await client.connect();
 
+    console.log(
+      "MongoDB Connected Successfully"
+    );
+
     const doctorsCollection =
       client
         .db("docAppointDB")
@@ -67,9 +71,7 @@ async function run() {
 
     app.get("/doctors", async (req, res) => {
       const result =
-        await doctorsCollection
-          .find()
-          .toArray();
+        await doctorsCollection.find().toArray();
 
       res.send(result);
     });
@@ -77,10 +79,12 @@ async function run() {
     app.get(
       "/doctors/:id",
       async (req, res) => {
-        const id = req.params.id;
+        const id = parseInt(
+          req.params.id
+        );
 
         const query = {
-          _id: new ObjectId(id),
+          id: id,
         };
 
         const result =
@@ -107,8 +111,7 @@ async function run() {
     );
 
     app.get(
-      "/bookings",
-      verifyToken,
+  "/bookings",
       async (req, res) => {
         const result =
           await bookingsCollection
@@ -154,19 +157,12 @@ async function run() {
         res.send(result);
       }
     );
-
-    await client
-      .db("admin")
-      .command({ ping: 1 });
-
-    console.log(
-      "MongoDB Connected Successfully"
-    );
-  } finally {
+  } catch (error) {
+    console.log(error);
   }
 }
 
-run().catch(console.dir);
+run();
 
 app.get("/", (req, res) => {
   res.send("Doc Appoint Server Running");
