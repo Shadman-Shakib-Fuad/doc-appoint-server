@@ -25,6 +25,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
+      "https://doc-appoint-olive.vercel.app",
     ],
     credentials: true,
   })
